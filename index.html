@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>كيف يعمل الويب؟ يعني إيه Domain و DNS | Ahmed Devly</title>
+<meta name="description" content="شرح مبسط بالمصري: يعني إيه Domain، إيه رحلة الـ DNS، وإيه اللي بيحصل لما تكتب عنوان أو كلمة بحث في المتصفح. مع أمثلة تفاعلية واختبار.">
+<meta name="author" content="Ahmed Devly">
+<meta property="og:title" content="كيف يعمل الويب؟ Domain و DNS بالمصري">
+<meta property="og:description" content="صفحة تعليمية تفاعلية تشرح الدومين والـ DNS ورحلة المتصفح خطوة بخطوة.">
+<meta property="og:type" content="article"><meta property="og:locale" content="ar_EG">
+<meta name="theme-color" content="#5E3FC1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LearningResource","name":"كيف يعمل الويب؟ Domain و DNS","inLanguage":"ar-EG","author":{"@type":"Person","name":"Ahmed Devly","url":"https://web.facebook.com/ahmeddevlyofficial"},"teaches":"Domain, DNS, Browser, HTTPS","learningResourceType":"Interactive lesson"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"يعني إيه Domain؟","acceptedAnswer":{"@type":"Answer","text":"الدومين هو اسم الموقع اللي بنكتبه في المتصفح بدل عنوان الـ IP، زي google.com."}},{"@type":"Question","name":"يعني إيه DNS؟","acceptedAnswer":{"@type":"Answer","text":"DNS هو نظام أسماء النطاقات، بيترجم اسم الدومين لعنوان IP يقدر المتصفح يتصل بيه."}},{"@type":"Question","name":"هل الدومين هو الاستضافة؟","acceptedAnswer":{"@type":"Answer","text":"لأ. الدومين اسم، والاستضافة مكان ملفات الموقع، وممكن تشتري كل واحد لوحده."}}]}]}</script>
+<style>
+:root{--p:#5E3FC1;--p2:#7A5ED0;--pd:#4A2D91;--g:#94E064;--bg:#f6f3ff;--cd:#fff;--tx:#1f1b2e;--mu:#5a5470;--bd:#e0d8f6;--pt:#5E3FC1;--ok:#d8f5c4;--no:#fbdada;--sh:0 6px 24px rgba(94,63,193,.12);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14111f;--cd:#1e1a30;--tx:#f0ecfb;--mu:#b6aed2;--bd:#352e55;--pt:#b9a5ff;--ok:#1f4a1a;--no:#5a2222;--sh:none;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#14111f;--cd:#1e1a30;--tx:#f0ecfb;--mu:#b6aed2;--bd:#352e55;--pt:#b9a5ff;--ok:#1f4a1a;--no:#5a2222;--sh:none;color-scheme:dark}
+html{scroll-padding-top:calc(7rem + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,"Segoe UI",sans-serif;line-height:1.9}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--cd);z-index:30}
+h1,h2,h3{line-height:1.4;margin:0 0 .6rem}h2{font-size:1.7rem;color:var(--pt)}h3{font-size:1.15rem}
+p{margin:.4rem 0 1rem;max-width:68ch}a{color:var(--pt)}code{direction:ltr;unicode-bidi:isolate;background:var(--bg);padding:0 .4rem;border-radius:.3rem}
+:focus-visible{outline:3px solid var(--g);outline-offset:3px}
+button{font:inherit;cursor:pointer;color:inherit}
+.skip{position:absolute;top:-4rem;right:1rem;background:var(--p);color:#fff;padding:.5rem 1rem;z-index:50}.skip:focus{top:.5rem}
+#bar{position:fixed;top:env(safe-area-inset-top,0px);right:0;height:4px;background:linear-gradient(270deg,var(--g),var(--p2));width:0;z-index:40}
+.hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--cd);border-bottom:1px solid var(--bd);padding:.4rem 1rem}
+.top{display:flex;align-items:center;gap:.8rem;justify-content:space-between;max-width:62rem;margin:auto}
+.brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--tx);font-weight:800;direction:ltr}.brand span{color:var(--pt)}
+.logo{width:2rem;height:2rem;border-radius:.6rem;background:var(--p);color:#fff;display:grid;place-items:center;font-size:.9rem}
+.chip{font-size:.85rem;background:var(--bg);border:1px solid var(--bd);border-radius:2rem;padding:.1rem .8rem;white-space:nowrap}
+.ib{border:1px solid var(--bd);background:var(--bg);border-radius:.6rem;min-width:2.6rem;min-height:2.6rem}
+nav{display:flex;gap:.4rem;overflow-x:auto;padding:.3rem 0;max-width:62rem;margin:auto;scrollbar-width:none}
+nav a{white-space:nowrap;text-decoration:none;color:var(--tx);padding:.2rem .8rem;border-radius:2rem;font-size:.92rem;border:1px solid transparent}
+nav a.on{background:var(--p);color:#fff}nav a:hover{border-color:var(--p2)}
+main{max-width:62rem;margin:0 auto;padding:0 1rem}
+.hero{display:grid;gap:2rem;align-items:center;padding:3rem 0 1.5rem;grid-template-columns:1.2fr .8fr}
+.hero h1{font-size:2.4rem;font-weight:800}.lead{font-size:1.1rem;color:var(--mu)}
+.cta{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.brw{direction:ltr;background:var(--cd);border:1px solid var(--bd);border-radius:1rem;box-shadow:var(--sh);overflow:hidden}
+.brw i{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;background:var(--p2);margin:.6rem .2rem .4rem .5rem}
+.url{margin:.2rem .8rem .8rem;padding:.4rem 1rem;border-radius:2rem;background:var(--bg);font-family:monospace;min-height:2.4rem;color:var(--pt)}
+.url::after{content:"";display:inline-block;width:2px;height:1.1em;background:var(--g);margin-left:2px;vertical-align:middle;animation:bl 1s steps(2) infinite}
+.pg{padding:1rem;font-size:.85rem;color:var(--mu);direction:rtl}
+@keyframes bl{50%{opacity:0}}
+section{padding:1.8rem 0}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:1rem;padding:1.2rem;box-shadow:var(--sh)}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.ico{font-size:1.8rem;display:block}
+.hl{background:var(--bg);border-inline-start:5px solid var(--g);padding:.7rem 1rem;border-radius:.5rem;margin:1rem 0}
+.btn{background:var(--p);color:#fff;border:0;border-radius:.7rem;padding:.5rem 1.2rem;font-weight:600;min-height:2.6rem;text-decoration:none;display:inline-flex;align-items:center}.btn:hover{background:var(--pd)}
+.btn.alt{background:var(--cd);color:var(--tx);border:1px solid var(--bd)}.btn.alt:hover{border-color:var(--p2)}
+.parts{direction:ltr;display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;font-family:monospace;font-size:1.6rem;margin:1rem 0}
+.parts button{border:2px dashed var(--p2);background:var(--cd);border-radius:.6rem;padding:.2rem .7rem}.parts button[aria-pressed=true]{background:var(--p);color:#fff;border-style:solid}
+.dots{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.dots button{width:2.6rem;height:2.6rem;border-radius:50%;border:2px solid var(--p2);background:var(--cd)}.dots .d{background:var(--p2);color:#fff}.dots .c{background:var(--g);color:#222;border-color:var(--g);font-weight:800}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.tag{display:inline-block;direction:ltr;background:var(--p);color:#fff;border-radius:.4rem;padding:0 .6rem;font-family:monospace;font-size:.9rem}
+input[type=text]{width:100%;font:inherit;padding:.7rem 1rem;border-radius:.8rem;border:2px solid var(--bd);background:var(--cd);color:var(--tx);margin:.4rem 0}
+table{width:100%;border-collapse:collapse;background:var(--cd);border-radius:.8rem;overflow:hidden}th,td{padding:.6rem;border-bottom:1px solid var(--bd);text-align:start}th{background:var(--p);color:#fff}
+.wrap{overflow-x:auto}ol.l{padding-inline-start:1.4rem}
+label.ck{display:flex;gap:.7rem;align-items:flex-start;padding:.4rem .5rem;border-radius:.6rem;cursor:pointer}label.ck:hover{background:var(--bg)}label.ck input{width:1.3rem;height:1.3rem;margin-top:.5rem;accent-color:var(--p)}
+.pb{height:.7rem;background:var(--bd);border-radius:1rem;overflow:hidden}.pb div{height:100%;background:var(--g);width:0;transition:width .4s}
+details{background:var(--cd);border:1px solid var(--bd);border-radius:.8rem;padding:.6rem 1rem;margin-bottom:.6rem}summary{cursor:pointer;font-weight:600}
+.tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem}.tabs button{border:1px solid var(--bd);background:var(--cd);border-radius:2rem;padding:.3rem 1rem}.tabs button[aria-selected=true]{background:var(--p);color:#fff}
+.qh{display:flex;justify-content:space-between;gap:1rem;font-weight:600;margin-bottom:.5rem}
+.q{margin-bottom:1rem}.q button.o{display:block;width:100%;text-align:start;margin:.3rem 0;padding:.6rem 1rem;border-radius:.7rem;border:1px solid var(--bd);background:var(--cd)}
+.q button.o:not(:disabled):hover{border-color:var(--p2)}.q .ok{background:var(--ok)!important}.q .no{background:var(--no)!important}
+.res{text-align:center;padding:1.5rem}.res b{font-size:2.2rem;color:var(--pt);display:block}
+.fab{position:fixed;left:.8rem;bottom:calc(.8rem + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:.4rem;z-index:25;direction:ltr}
+.fab button{background:var(--p);color:#fff;border:2px solid var(--cd);border-radius:50%;width:2.8rem;height:2.8rem;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+footer{background:var(--pd);color:#fff;padding:2rem 1rem 6rem;margin-top:2rem}footer a{color:var(--g)}footer .in2{max-width:62rem;margin:auto}footer h2{color:#fff}
+@media(max-width:700px){.hero{grid-template-columns:1fr;padding-top:1.5rem}.hero h1{font-size:1.8rem}.parts{font-size:1.15rem}h2{font-size:1.45rem}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.cta-rv{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border-radius:1.2rem;padding:2rem 1.2rem;text-align:center;box-shadow:var(--sh)}
+.cta-rv h2{color:#fff;margin-bottom:.4rem}
+.cta-rv p{margin:.3rem auto 1rem;color:#efeaff}
+.cta-rv .stars{font-size:1.8rem;letter-spacing:.2rem;color:#ffd24a;margin-bottom:.4rem}
+.cta-rv .btn{background:var(--g);color:#14111f;font-weight:800}
+.cta-rv .btn:hover{background:#b0f08a}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">تخطَّ إلى المحتوى</a><div id="bar"></div>
+<header class="hd"><div class="top"><a class="brand" href="#top"><span class="logo" aria-hidden="true">AD</span><b>Ahmed<span>Devly</span></b></a><div style="display:flex;gap:.5rem;align-items:center"><span class="chip" id="pg" aria-live="polite">تقدّمك 0/8</span><button class="ib" id="th" aria-label="تبديل الوضع الليلي">🌓</button></div></div>
+<nav aria-label="أقسام الصفحة"><a href="#domain">الدومين</a><a href="#dns">رحلة الـ DNS</a><a href="#search">اكتب وجرّب</a><a href="#buy">شراء ونصايح</a><a href="#myths">مفاهيم غلط</a><a href="#seo">SEO و AEO و GEO</a><a href="#a11y">إتاحة الوصول</a><a href="#quiz">اختبر نفسك</a></nav></header>
+<main id="main">
+<div class="hero"><div><h1>كيف يعمل الويب؟ من اول  ما تكتب العنوان لحد ما الصفحة تفتح</h1><p class="lead">هنفهم سوا يعني إيه <b>Domain</b>، ودور الـ <b>DNS</b>، وإيه اللي بيعمله المتصفح. كل قسم فيه تجربة صغيرة  ،   .</p><div class="cta"><a class="btn" href="#domain">ابدأ من الأول</a><a class="btn alt" href="#quiz">روح للاختبار</a></div></div>
+<div class="brw" aria-hidden="true"><i></i><i></i><i></i><div class="url" id="ty"></div><div class="pg">المتصفح بيحوّل الاسم ده لرقم IP قبل ما يفتح الصفحة.</div></div></div>
+
+<section id="domain"><h2>١. يعني إيه Domain؟</h2>
+<p>الـ <b>Domain</b> (اسم النطاق) هو الاسم اللي بنكتبه في المتصفح علشان نوصل لموقع، زي <code>google.com</code>. تخيّل إن الموقع بيت: الـ <b>IP Address</b> هو العنوان بالأرقام، والدومين هو اسم البيت السهل.</p>
+<div class="card"><h3>اضغط على كل جزء وشوف معناه</h3><div class="parts" id="parts" role="group" aria-label="أجزاء الدومين"></div><div id="pi" class="hl" aria-live="polite">اختار جزء من العنوان فوق.</div></div>
+<h3 style="margin-top:1.5rem">الدومين مش الموقع ومش الاستضافة</h3>
+<div class="grid"><div class="card"><span class="ico">🏷️</span><b>Domain</b><p>الاسم اللي الناس بتكتبه.</p></div><div class="card"><span class="ico">📒</span><b>DNS</b><p>دفتر تليفونات بيحوّل الاسم لرقم IP.</p></div><div class="card"><span class="ico">🖥️</span><b>Hosting</b><p>السيرفر اللي عليه ملفات الموقع.</p></div></div>
+<div class="wrap" style="margin-top:1rem"><table><thead><tr><th>الامتداد</th><th>الاستخدام الشائع</th></tr></thead><tbody><tr><td dir="ltr">.com</td><td>تجاري وعام</td></tr><tr><td dir="ltr">.org</td><td>مؤسسات ومنظمات</td></tr><tr><td dir="ltr">.net</td><td>شبكات وخدمات تقنية</td></tr><tr><td dir="ltr">.edu / .gov</td><td>تعليمي وحكومي (بشروط تسجيل)</td></tr><tr><td dir="ltr">.io / .app / .dev</td><td>تقنية وتطبيقات ومطورين</td></tr><tr><td dir="ltr">.eg / .sa / .uk</td><td>امتدادات الدول (ccTLD)</td></tr></tbody></table></div></section>
+
+<section id="dns"><h2>٢. رحلة الـ DNS خطوة بخطوة</h2>
+<p><b>DNS</b> اختصار Domain Name System، وبيترجم الاسم لعنوان IP. افترض إنك كتبت <code>www.example.com</code>. دوس على الخطوات أو شغّل العرض التلقائي.</p>
+<div class="card"><div class="dots" id="dots" role="group" aria-label="خطوات الرحلة"></div><div id="stp" aria-live="polite"></div><div class="row"><button class="btn alt" id="pv">السابق</button><button class="btn" id="nx">التالي</button><button class="btn alt" id="pl">▶ شغّل تلقائي</button></div></div></section>
+
+<section id="search"><h2>٣. اكتب عنوان ولا كلمة بحث؟</h2>
+<p>المتصفح بيبص على اللي كتبته: لو شكله عنوان موقع بيبدأ رحلة الـ DNS، ولو كلام عادي بيبعته لمحرك البحث الافتراضي. جرّب بنفسك:</p>
+<div class="card"><label for="q"><b>اكتب هنا زي ما بتكتب في شريط المتصفح</b></label><input type="text" id="q" dir="auto" placeholder="مثال: google.com أو أحسن مطعم كشري" autocomplete="off"><div id="res" class="hl" aria-live="polite"></div><div class="row" style="margin:0"><button class="btn alt" data-ex="youtube.com">جرّب youtube.com</button><button class="btn alt" data-ex="أحسن مطعم كشري">جرّب جملة بحث</button></div></div>
+<p class="lead" style="margin-top:.8rem">ملحوظة: المتصفحات الحقيقية بتستخدم قواعد أذكى شوية، لكن الفكرة العامة هي دي.</p></section>
+
+<section id="buy"><h2>٤. إزاي أشتري دومين وأختاره صح؟</h2>
+<ol class="l"><li>تختار الاسم وتشوف متاح ولا محجوز (مثلاً <a href="https://instantdomainsearch.com/" target="_blank" rel="noopener">Instant Domain Search</a>).</li><li>تختار شركة <b>Registrar</b> (اللي بتبيع الدومينات).</li><li>تسجّل بياناتك وتدفع الرسوم.</li><li>الشركة تسجّل الاسم في الـ <b>Registry</b> بتاع الامتداد.</li><li>تدير إعدادات الدومين والـ DNS.</li></ol>
+<h3>في دومين مجاني؟</h3>
+<div class="wrap"><table><thead><tr><th>النوع</th><th>مثال</th><th>مستقل؟</th></tr></thead><tbody><tr><td>مدفوع</td><td dir="ltr">example.com</td><td>نعم</td></tr><tr><td>Subdomain مجاني</td><td dir="ltr">example.vercel.app</td><td>لا، تابع للخدمة</td></tr><tr><td>عرض ترويجي</td><td>حسب العرض</td><td>ممكن، والتجديد غالباً مدفوع</td></tr></tbody></table></div>
+<p style="margin-top:.6rem">الروابط المجانية زي <code>username.github.io</code> ممتازة لمشاريع الطلبة، بس مش دومين تملكه.</p>
+<div class="card"><h3>قائمة نصايح (علّم اللي فهمته)</h3><div id="ck"></div><div class="pb" aria-hidden="true"><div id="ckb"></div></div><p id="ckt" aria-live="polite"></p></div></section>
+<section id="review" aria-labelledby="rv-t">
+  <div class="cta-rv">
+    <div class="stars" aria-hidden="true">★★★★★</div>
+    <h2 id="rv-t">الدرس فادك؟ قيّمنا على جوجل</h2>
+    <p>تقييمك بياخد دقيقة، وبيساعدنا نكمّل ونقدّم دروس أكتر.</p>
+    <a class="btn" href="https://g.page/r/CYaR3yLHTLdYECE/review" target="_blank" rel="noopener">اكتب تقييمك على جوجل ⭐</a>
+  </div>
+</section>
+<section id="myths"><h2>٥. مفاهيم شائعة غلط</h2><div id="my"></div></section>
+
+<section id="seo"><h2>٦. الدومين والبحث: SEO و AEO و GEO</h2>
+<p>اسم موقعك بيأثر على الثقة والبراند، لكن ظهورك في البحث بيعتمد على محتوى واضح وموقع سريع وآمن. اختار مصطلح:</p>
+<div class="tabs" role="tablist" id="tabs"></div><div class="card" id="tp" role="tabpanel" aria-live="polite"></div></section>
+
+<section id="a11y"><h2>٧. إتاحة الوصول (Accessibility)</h2>
+<p>الموقع الكويس بيتفتح لكل الناس، منهم اللي نظره ضعيف أو بيستخدم كيبورد بس. الصفحة دي فيها:</p>
+<div class="grid"><div class="card"><span class="ico">🔠</span>أزرار تكبير وتصغير الخط على الشمال (A+ وA-).</div><div class="card"><span class="ico">🌓</span>وضع ليلي بيتغير تلقائي حسب جهازك، وتقدر تبدّله بإيدك.</div><div class="card"><span class="ico">⌨️</span>تنقل بالكيبورد، ورابط تخطي، وتركيز واضح.</div><div class="card"><span class="ico">🎞️</span>احترام إعداد تقليل الحركة في جهازك.</div></div>
+<div class="hl">قاعدة للمطورين: استخدم HTML دلالي (<code>header</code> و<code>main</code> و<code>nav</code>)، وأضف <code>alt</code> للصور، وخلّي تباين الألوان 4.5:1 على الأقل حسب معايير <b>WCAG</b>.</div></section>
+
+<section id="quiz"><h2>٨. اختبر نفسك</h2><p>١٠ أسئلة على اللي اتعلمته. اختار إجابة وهتشوف التصحيح فوراً.</p><div id="qz"></div><div class="row"><button class="btn alt" id="qr">إعادة الاختبار</button></div></section>
+</main>
+<footer><div class="in2"><h2>Ahmed Devly</h2><p>تابع المزيد من الدروس على صفحتي الرسمية:</p><p><a href="https://web.facebook.com/ahmeddevlyofficial" target="_blank" rel="noopener">facebook.com/ahmeddevlyofficial</a></p><p>المصادر للتوسع: <a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_domain_name" target="_blank" rel="noopener">MDN</a> · <a href="https://www.cloudflare.com/learning/dns/what-is-dns/" target="_blank" rel="noopener">Cloudflare</a> · <a href="https://www.icann.org/" target="_blank" rel="noopener">ICANN</a> · <a href="https://developers.google.com/search/docs" target="_blank" rel="noopener">Google Search Central</a> · <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">WCAG</a></p><button class="btn alt" id="rs">مسح تقدّمي المحفوظ</button></div></footer>
+<div class="fab"><button id="fu" aria-label="تكبير الخط">A+</button><button id="fd" aria-label="تصغير الخط">A-</button><button id="up" aria-label="للأعلى">↑</button></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],R=document.documentElement;
+let S={};try{S=JSON.parse(localStorage.getItem('adweb')||'{}')}catch(e){}
+/* مهم: تهيئة كل القيم قبل أي استخدام (ده كان سبب اختفاء الاختبار) */
+S.fs=S.fs||100;S.seen=S.seen||[];S.ck=S.ck||[];S.my=S.my||[];S.qz=S.qz||{};S.tab=S.tab||0;S.step=S.step||0;
+const save=()=>{try{localStorage.setItem('adweb',JSON.stringify(S))}catch(e){}};
+const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+function mark(id){if(id&&!S.seen.includes(id)){S.seen.push(id);save()}$('#pg').textContent='تقدّمك '+Math.min(S.seen.length,8)+'/8'}
+/* font + theme */
+const af=()=>R.style.fontSize=S.fs+'%';af();
+$('#fu').onclick=()=>{S.fs=Math.min(150,S.fs+10);af();save()};$('#fd').onclick=()=>{S.fs=Math.max(80,S.fs-10);af();save()};
+if(S.theme)R.dataset.theme=S.theme;
+$('#th').onclick=()=>{const d=R.dataset.theme?R.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;S.theme=d?'light':'dark';R.dataset.theme=S.theme;save()};
+$('#up').onclick=()=>scrollTo({top:0});
+$('#rs').onclick=()=>{try{localStorage.removeItem('adweb')}catch(e){}location.reload()};
+/* typing */
+const W=['www.google.com','www.ahmeddevly.com','example.com.eg'],rm=matchMedia('(prefers-reduced-motion:reduce)').matches;let wi=0,ci=0,del=0;
+function tp(){const w=W[wi];if(rm){$('#ty').textContent=w;return}$('#ty').textContent=w.slice(0,ci);if(!del&&ci<w.length){ci++;setTimeout(tp,110)}else if(!del){del=1;setTimeout(tp,1400)}else if(ci>0){ci--;setTimeout(tp,50)}else{del=0;wi=(wi+1)%W.length;setTimeout(tp,300)}}tp();
+/* anatomy */
+const P=[['www','Subdomain','مقدمة اختيارية قدام الاسم، وبتقسّم الموقع لأقسام زي blog.example.com.'],['example','Second-Level Domain (SLD)','الاسم اللي إنت بتختاره وتسجله: اسم البراند أو الشركة أو المشروع.'],['.com','Top-Level Domain (TLD)','الامتداد اللي في آخر الدومين، وبيدل غالباً على نوع الموقع.'],['.eg','Country Code TLD (ccTLD)','امتداد مرتبط بدولة: .eg لمصر و.sa للسعودية. وبيتحط بعد .com في example.com.eg.']];
+P.forEach((p,i)=>{const b=E('button','',p[0]);b.setAttribute('aria-pressed','false');b.onclick=()=>{$$('#parts button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');const r=$('#pi');r.innerHTML='';r.append(E('b','',p[1]+': '),p[2]);S.part=i;save();mark('domain')};$('#parts').append(b)});
+if(S.part!=null)$$('#parts button')[S.part].click();
+/* dns stepper */
+const D=[['⌨️','اكتب العنوان','Browser','كتبت العنوان والمتصفح محتاج يحوّله لعنوان IP علشان يعرف يتصل.','زي ما تعرف اسم صاحبك بس مش عنوان بيته.'],['🧠','دوّر في الذاكرة','Cache','بيدوّر في Browser Cache، وبعدين في نظام التشغيل، وبعدين في Resolver Cache. لو لقى نتيجة لسه صالحة بيكمل على طول.','زي ما تفتكر الطريق من آخر مرة.'],['🔎','اسأل الـ Resolver','Recursive Resolver','لو مفيش نتيجة، جهازك بيسأل الـ Resolver (غالباً تابع لمزود الإنترنت أو DNS عام) وهو اللي بيدوّر نيابة عنك.','زي سكرتير بيدوّر لك.'],['🌍','اسأل الـ Root','Root Nameserver','الـ Resolver بيسأل الـ Root عن مكان خوادم الامتداد .com.','زي الاستعلامات في مدخل المدينة.'],['📂','اسأل الـ TLD','TLD Nameserver','خوادم .com بتدله على الخوادم المسؤولة عن example.com.','زي الإشارة للحي اللي فيه البيت.'],['✅','وصلنا للمسؤول','Authoritative Nameserver','ده الخادم اللي عنده سجلات الدومين (DNS Records)، وبيرد بعنوان الـ IP.','زي صاحب البيت نفسه بيدّيك العنوان.'],['📬','الـ IP يرجع','IP Address','العنوان يرجع للـ Resolver ومنه لجهازك، وبيتحفظ مؤقتاً في الكاش.','الرقم وصلك وبقيت جاهز تمشي.'],['🚀','الصفحة تفتح','HTTP / HTTPS','المتصفح يتصل بالسيرفر بالـ IP ويطلب الصفحة عن طريق HTTP أو HTTPS، والسيرفر يرد وتظهر قدامك.','دخلت البيت وشفت اللي كنت عايزه.']];
+let si=Math.min(S.step,7),tm=null,seenSteps=new Set([si]);
+function rs(){const s=D[si],b=$('#stp');b.innerHTML='';const t=E('h3','',s[0]+' الخطوة '+(si+1)+': '+s[1]+' ');t.append(E('span','tag',s[2]));b.append(t,E('p','',s[3]),E('div','hl','تشبيه: '+s[4]));$$('#dots button').forEach((x,i)=>{x.className=i<si?'d':i===si?'c':'';x.setAttribute('aria-current',i===si?'step':'false')});S.step=si;save();seenSteps.add(si);if(seenSteps.size>=4)mark('dns')}
+D.forEach((s,i)=>{const b=E('button','',i+1);b.setAttribute('aria-label','الخطوة '+(i+1)+': '+s[1]);b.onclick=()=>{si=i;stop();rs()};$('#dots').append(b)});
+const stop=()=>{clearInterval(tm);tm=null;$('#pl').textContent='▶ شغّل تلقائي'};
+$('#nx').onclick=()=>{si=(si+1)%8;stop();rs()};$('#pv').onclick=()=>{si=(si+7)%8;stop();rs()};
+$('#pl').onclick=()=>{if(tm)return stop();$('#pl').textContent='⏸ إيقاف';tm=setInterval(()=>{si=(si+1)%8;rs()},2800)};rs();
+/* search sim */
+const re=/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i;
+function sim(){const v=$('#q').value.trim(),r=$('#res');r.innerHTML='';if(!v){r.textContent='اكتب أي حاجة وهتشوف إيه اللي هيحصل.';return}
+if(re.test(v))r.append(E('b','','شكله عنوان موقع ✅ '),E('br'),'الخطوات: DNS يجيب الـ IP ← المتصفح يتصل بالسيرفر عن طريق HTTPS ← الصفحة تظهر. (الدومين: '+v.replace(/^https?:\/\//i,'').split('/')[0]+')');
+else r.append(E('b','','ده كلام بحث 🔍 '),E('br'),'المتصفح هيبعته لمحرك البحث الافتراضي ← محرك البحث يعرض صفحة النتائج ← تدوس على نتيجة، وساعتها تبدأ رحلة الـ DNS للموقع اللي اخترته.');
+S.q=v;save();if(v)mark('search')}
+$('#q').oninput=sim;$$('[data-ex]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.ex;sim()});if(S.q)$('#q').value=S.q;sim();
+/* checklist */
+const C=['اختار اسم مميز وفريد يمثّل البراند بتاعك.','قصير وسهل الحفظ والنطق والكتابة بالإنجليزي.','تجنّب الأرقام والشرطات (-) قدر الإمكان.','راجع أسماء المنافسين والعلامات التجارية قبل التسجيل.','راجع سعر التجديد مش سعر أول سنة بس.','اتأكد إن حساب الدومين وبيانات المسجّل تحت سيطرتك.','لو المشروع تجاري اختار اسم يناسب استمرارية البراند.'];
+C.forEach((t,i)=>{const l=E('label','ck'),c=E('input');c.type='checkbox';c.checked=!!S.ck[i];c.onchange=()=>{S.ck[i]=c.checked;save();up()};l.append(c,E('span','',t));$('#ck').append(l)});
+function up(){const n=C.filter((_,i)=>S.ck[i]).length;$('#ckb').style.width=n/C.length*100+'%';$('#ckt').textContent=n===C.length?'برافو! خلّصت كل النصايح 🎉':'خلّصت '+n+' من '+C.length;if(n)mark('buy')}up();
+/* myths */
+const M=[['شراء الدومين يعني إني أملك الموقع؟','لأ، الدومين اسم مسجّل، والموقع وملفاته حاجة تانية.'],['أقدر أغيّر الاستضافة من غير ما أغيّر الدومين؟','أيوه، وأقدر كمان أغيّر شركة تسجيل الدومين بالـ Transfer حسب الشروط.'],['لازم أشتري Hosting مع Domain؟','لأ، كل واحد ممكن يتشترى لوحده.'],['أقدر أعمل أكتر من موقع على دومين واحد؟','أيوه، باستخدام Subdomains أو Paths.'],['أقدر أعمل إيميل من غير Hosting؟','أيوه، بخدمة بريد مستقلة.'],['DNS هو الاستضافة؟ وتغييره بيغيّر ملفات الموقع؟','لأ ولأ. الـ DNS بيوجّه الاسم بس، وملفات الموقع على الاستضافة.'],['HTTPS جزء من الدومين؟','لأ، HTTPS بروتوكول اتصال آمن بيحتاج شهادة TLS صالحة.'],['الدومين المجاني يناسب مشروع تجاري كبير؟','غالباً الأفضل دومين مستقل بتملكه وبتتحكم فيه.']];
+M.forEach((m,i)=>{const d=E('details');d.append(E('summary','',m[0]),E('p','',m[1]));d.open=!!S.my[i];d.ontoggle=()=>{S.my[i]=d.open;save();if(d.open)mark('myths')};$('#my').append(d)});
+/* seo tabs */
+const T=[['SEO','Search Engine Optimization: تحسين موقعك علشان يظهر في نتايج جوجل وغيره.',['عنوان ووصف واضحين لكل صفحة (title وmeta description).','موقع سريع وبيشتغل كويس على الموبايل وبـ HTTPS.','اختار نسخة واحدة للعنوان (www أو من غير) واعمل لها redirect وcanonical.']],['AEO','Answer Engine Optimization: تجهيز المحتوى علشان محركات الإجابة والمساعدات تلاقي إجابة مباشرة منه.',['اكتب السؤال كعنوان فرعي وتحته إجابة من سطرين.','أضف قسم أسئلة شائعة، وبيانات منظمة (Schema) زي FAQPage.','استخدم لغة بسيطة وجمل قصيرة.']],['GEO','Generative Engine Optimization: كتابة محتوى تقدر أدوات الذكاء الاصطناعي تفهمه وتستشهد بيه.',['اذكر مصادر وأرقام موثّقة، واكتب باسم واضح (مؤلف وصفحة تعريف).','قسّم المحتوى لأفكار مستقلة بعناوين واضحة.','حدّث المحتوى باستمرار. مفيش ضمان إن أداة معينة هتستشهد بيك.']],['AI Overviews','ملخصات بتظهرها جوجل بالذكاء الاصطناعي فوق النتايج وبتحط روابط للمصادر.',['مفيش حاجة سحرية: جوجل بتقول إن نفس أساسيات الـ SEO بتنطبق.','اكتب محتوى مفيد وأصلي يجاوب الناس بجد.','تأكد إن صفحاتك قابلة للأرشفة ومفيهاش حظر للزواحف.']],['Accessibility','إتاحة الوصول بتفيد الناس وبتحسّن فهم الآلات للصفحة كمان.',['عناوين مرتبة (h1 ثم h2) ونص بديل alt للصور.','تباين ألوان كويس وخط قابل للتكبير.','أزرار وحقول بيها label وتتشغل بالكيبورد.']]];
+function tb(i){S.tab=i;save();$$('#tabs button').forEach((b,j)=>b.setAttribute('aria-selected',j===i));const p=$('#tp'),t=T[i],u=E('ul');p.innerHTML='';t[2].forEach(x=>u.append(E('li','',x)));p.append(E('h3','',t[0]),E('p','',t[1]),u);mark('seo')}
+T.forEach((t,i)=>{const b=E('button','',t[0]);b.setAttribute('role','tab');b.onclick=()=>tb(i);$('#tabs').append(b)});tb(Math.min(S.tab,T.length-1));
+/* quiz: 10 أسئلة */
+const Q=[['الدومين هو؟',['عنوان IP بالأرقام','الاسم اللي بنكتبه للوصول لموقع','سيرفر الموقع'],1,'الدومين اسم سهل بدل الأرقام.'],['مين اللي بيترجم الدومين لـ IP؟',['DNS','HTTPS','Hosting'],0,'DNS هو دفتر تليفونات الإنترنت.'],['في www.example.com، إيه هو الـ www؟',['الامتداد','Subdomain','اسم الشركة'],1,'الـ www مقدمة اختيارية (Subdomain) قدام الاسم.'],['.eg يعتبر؟',['امتداد دولة (ccTLD)','Subdomain','بروتوكول'],0,'.eg امتداد خاص بمصر.'],['أول مكان بيدوّر فيه المتصفح عن الـ IP؟',['Root Nameserver','الكاش','السيرفر'],1,'لو فيه نتيجة صالحة في الكاش بيستخدمها على طول.'],['مين اللي بيدوّر نيابة عن جهازك في رحلة الـ DNS؟',['Recursive Resolver','الـ Registrar','الـ Hosting'],0,'الـ Resolver بيسأل Root ثم TLD ثم الخادم المسؤول.'],['example.vercel.app يعتبر؟',['دومين مستقل ملكك','Subdomain تابع لخدمة Vercel','امتداد دولة'],1,'الخدمة هي اللي بتسمحلك تستخدمه.'],['HTTPS جزء من الدومين؟',['أيوه','لأ، ده بروتوكول اتصال آمن','حسب الامتداد'],1,'محتاج شهادة TLS صالحة.'],['لو اشتريت دومين، هل لازم تشتري استضافة معاه؟',['أيوه دايماً','لأ، كل واحد ممكن يتشترى لوحده','لأ، الدومين بيشمل الاستضافة'],1,'الدومين اسم والاستضافة مكان الملفات.'],['كتبت "أحسن مطعم كشري" في شريط المتصفح. إيه اللي هيحصل؟',['يتعامل معاها كعنوان موقع','تتبعت لمحرك البحث الافتراضي','تتحول لـ IP'],1,'الكلام العادي بيتبعت لمحرك البحث.']];
+function rq(){const b=$('#qz');b.innerHTML='';let n=0,a=0;
+Q.forEach((q,i)=>{const d=E('div','q card'),h=E('div','qh');h.append(E('span','',(i+1)+'. '+q[0]),E('span','chip',(i+1)+'/'+Q.length));d.append(h);const done=S.qz[i]!=null;if(done){a++;if(S.qz[i]===q[2])n++}
+q[1].forEach((o,j)=>{const x=E('button','o',o);if(done){x.disabled=true;if(j===q[2])x.classList.add('ok');else if(j===S.qz[i])x.classList.add('no')}x.onclick=()=>{S.qz[i]=j;save();rq()};d.append(x)});
+if(done)d.append(E('div','hl',(S.qz[i]===q[2]?'✅ صح! ':'❌ مش بالظبط. ')+q[3]));b.append(d)});
+const r=E('div','card res');r.setAttribute('aria-live','polite');
+if(a===Q.length){const m=n===Q.length?'ممتاز! فاهم الأساسيات 🎉':n>=7?'كويس جداً، راجع الأخطاء وهتبقى جاهز.':'راجع الأقسام فوق وجرّب تاني، هتفرق معاك.';r.append(E('b','',n+' / '+Q.length),E('p','',m))}
+else r.append(E('p','','جاوبت '+a+' من '+Q.length+'. كمّل علشان تشوف نتيجتك.'));
+b.append(r);if(a)mark('quiz')}
+$('#qr').onclick=()=>{S.qz={};save();rq();$('#quiz').scrollIntoView()};rq();
+/* scroll: progress bar + active nav */
+const io='IntersectionObserver'in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){$$('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));if(e.target.id==='a11y')mark('a11y')}}),{rootMargin:'-30% 0px -60% 0px'}):null;
+$$('main section').forEach(s=>io&&io.observe(s));mark();
+addEventListener('scroll',()=>{const h=R.scrollHeight-innerHeight;$('#bar').style.width=(h>0?scrollY/h*100:0)+'%'},{passive:true});
+</script>
+</body>
+</html>
